@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Streamer</title>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+  </head>
+  <body>
+    <img id="img"></img>
+
+    <script>
+      var socket = io();
+      var $img = document.getElementById('img');
+
+      socket.on('stream', function(image) {
+        $img.src = image;
+      });
+    </script>
+  </body>
+</html>

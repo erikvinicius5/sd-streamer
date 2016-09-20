@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Streamer</title>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <style>
+      video { width: 640px; height: 480px; }
+      canvas { display: none }
+    </style>
+  </head>
+  <body>
+    <video id="video" src="" autoplay="true"></video>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      var socket = io();
+      var $video = document.getElementById('video');
+      var $canvas = document.getElementById('canvas');
+      var context = $canvas.getContext('2d');
+
+      context.width = canvas.width = 800;
+      context.height = canvas.height = 600;
+
+      function onCameraLoad(stream) {
+        $video.src = window.URL.createObjectURL(stream);
+      }
+
+      function updateCanvas() {
+        context.drawImage($video, 0, 0, context.width, context.height);
+        socket.emit('stream', canvas.toDataURL('image/webp'));
+      }
+
+      window.onload = function() {
+        if (navigator.getUserMedia) {
+          navigator.getUserMedia({ video: true }, onCameraLoad, console.error);
+          setInterval(function() { updateCanvas() }, 50);
+        }
+      }
+    </script>
+  </body>
+</html>
